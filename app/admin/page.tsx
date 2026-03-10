@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import DashboardCharts from '@/components/Admin/DashboardCharts'
 
 export default async function AdminDashboard() {
     const supabase = await createClient()
@@ -41,6 +42,9 @@ export default async function AdminDashboard() {
                     <p className="text-4xl font-extrabold text-slate-100 mt-2 relative z-10">{projectCount || 0}</p>
                 </div>
             </div>
+
+            {/* Grafikler */}
+            <DashboardCharts />
         </div>
     )
 }

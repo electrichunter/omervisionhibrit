@@ -41,6 +41,18 @@ export default function AdminLayout({
                     >
                         Yorum Yönetimi
                     </Link>
+                    <Link
+                        href="/admin/settings"
+                        className="flex items-center px-4 py-3 text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors border border-transparent hover:border-slate-600"
+                    >
+                        Site Ayarları
+                    </Link>
+                    <Link
+                        href="/admin/profile"
+                        className="flex items-center px-4 py-3 text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors border border-transparent hover:border-slate-600"
+                    >
+                        Profil
+                    </Link>
                 </nav>
                 <div className="p-4 border-t border-slate-700">
                     <form action={logout}>

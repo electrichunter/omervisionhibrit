@@ -48,7 +48,7 @@ export default async function Navbar() {
                                 </Link>
                             )}
                             <Link
-                                href="/profile"
+                                href="/admin/profile"
                                 className="text-sm font-semibold text-slate-300 hover:text-white transition-colors"
                             >
                                 Profil

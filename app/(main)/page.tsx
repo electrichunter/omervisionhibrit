@@ -19,16 +19,38 @@ export default async function PortfolioPage() {
         .order('created_at', { ascending: false })
         .limit(3) // Sadece en yeni 3 yazıyı getir
 
+    const { data: siteSettings } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('id', 1)
+        .single()
+
+    // Default fallback values in case DB is empty
+    const settings = siteSettings || {
+        hero_title: 'Görünmeyeni Görünür Kılın',
+        hero_subtitle: 'ÖmerVision olarak dijital dünyadaki vizyonunuzu en iyi şekilde yansıtacak çözümler üretiyoruz. Modern tasarımlar ve güçlü altyapılarla yanınızdayız.',
+        about_title: 'Hakkımda',
+        about_text: 'Merhaba! Ben teknolojiye ve modern web geliştirmeye tutkuyla bağlı bir yazılım mühendisiyim. Mükemmel kullanıcı deneyimleri yaratmak ve karmaşık sistemleri sorunsuz ölçeklendirmek için modern araç setleri kullanıyorum.',
+        about_skills: ['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'Supabase', 'PostgreSQL'],
+        about_image_url: '/omervisison.png'
+    }
+
     return (
         <div className="space-y-24">
             {/* 1. Hero Bölümü */}
             <section className="relative flex flex-col items-center justify-center text-center py-20">
                 <div className="absolute inset-0 max-w-3xl mx-auto -z-10 bg-blue-600/20 blur-[120px] rounded-full"></div>
-                <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl mb-6 text-slate-100">
-                    Görünmeyeni <span className="text-blue-500">Görünür</span> Kılın
+
+                {/* Logo Area */}
+                <div className="mb-6 animate-fade-in-up">
+                    <Image src="/omervisison.png" alt="ÖmerVision Logo" width={80} height={80} className="rounded-full shadow-lg shadow-blue-500/20 border-2 border-slate-700/50" />
+                </div>
+
+                <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl mb-6 text-slate-100 max-w-4xl" dangerouslySetInnerHTML={{ __html: settings.hero_title.replace(/(Görünür)/g, '<span class="text-blue-500">$1</span>') }}>
                 </h1>
+
                 <p className="max-w-2xl text-lg sm:text-xl text-slate-300 mb-10">
-                    ÖmerVision olarak dijital dünyadaki vizyonunuzu en iyi şekilde yansıtacak çözümler üretiyoruz. Modern tasarımlar ve güçlü altyapılarla yanınızdayız.
+                    {settings.hero_subtitle}
                 </p>
                 <div className="flex gap-4">
                     <Link
@@ -50,15 +72,13 @@ export default async function PortfolioPage() {
             <section id="hakkimda" className="scroll-mt-24 bg-slate-800/50 border border-slate-800 rounded-3xl p-8 sm:p-12 shadow-xl">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <div>
-                        <h2 className="text-3xl font-bold text-slate-100 mb-4">Hakkımda</h2>
+                        <h2 className="text-3xl font-bold text-slate-100 mb-4">{settings.about_title}</h2>
                         <div className="h-1 w-20 bg-blue-500 rounded-full mb-6"></div>
-                        <p className="text-slate-300 leading-relaxed mb-6">
-                            Merhaba! Ben teknolojiye ve modern web geliştirmeye tutkuyla bağlı bir yazılım mühendisiyim.
-                            Mükemmel kullanıcı deneyimleri yaratmak ve karmaşık sistemleri sorunsuz ölçeklendirmek için modern araç setleri kullanıyorum.
-                            React, Next.js, Node.js ve cloud teknolojileri üzerine yoğunlaşıyorum.
+                        <p className="text-slate-300 leading-relaxed mb-6 whitespace-pre-line">
+                            {settings.about_text}
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            {['Next.js', 'React', 'TypeScript', 'TailwindCSS', 'Supabase', 'PostgreSQL'].map((tech) => (
+                            {settings.about_skills?.map((tech: string) => (
                                 <span key={tech} className="px-3 py-1 bg-slate-900 border border-slate-700 rounded-md text-xs font-medium text-slate-300">
                                     {tech}
                                 </span>
@@ -66,10 +86,12 @@ export default async function PortfolioPage() {
                         </div>
                     </div>
                     <div className="relative aspect-square md:aspect-[4/3] w-full max-w-md mx-auto rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
-                        {/* Gerçek görsel geldiğinde değiştirilebilir */}
-                        <div className="absolute inset-0 bg-slate-800 flex items-center justify-center">
-                            <span className="text-slate-500">Profil Görseli (Placehoder)</span>
-                        </div>
+                        <Image
+                            src={settings.about_image_url || '/omervisison.png'}
+                            alt={settings.about_title}
+                            fill
+                            className="object-cover"
+                        />
                     </div>
                 </div>
             </section>

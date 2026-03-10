@@ -65,3 +65,24 @@ CREATE POLICY "Public comments are viewable by everyone." ON comments FOR SELECT
 CREATE POLICY "Anyone can insert a comment." ON comments FOR INSERT WITH CHECK (true);
 -- Adminler yorumları silebilir/güncelleyebilir
 CREATE POLICY "Admin can manage comments" ON comments TO authenticated USING (true) WITH CHECK (true);
+
+-- ==========================================
+-- EKLENTİ TABLOLAR
+-- ==========================================
+
+-- 4. `site_settings` (Site Ayarları) Tablosu
+CREATE TABLE IF NOT EXISTS site_settings (
+  id integer PRIMARY KEY DEFAULT 1,
+  hero_title text DEFAULT 'Görünmeyeni Görünür Kılın',
+  hero_subtitle text DEFAULT 'ÖmerVision olarak dijital dünyadaki vizyonunuzu en iyi şekilde yansıtacak çözümler üretiyoruz. Modern tasarımlar ve güçlü altyapılarla yanınızdayız.',
+  about_title text DEFAULT 'Hakkımda',
+  about_text text DEFAULT 'Merhaba! Ben teknolojiye ve modern web geliştirmeye tutkuyla bağlı bir yazılım mühendisiyim. Mükemmel kullanıcı deneyimleri yaratmak ve karmaşık sistemleri sorunsuz ölçeklendirmek için modern araç setleri kullanıyorum.',
+  about_skills text[] DEFAULT '{"Next.js", "React", "TypeScript", "TailwindCSS", "Supabase", "PostgreSQL"}',
+  about_image_url text,
+  CONSTRAINT single_row CHECK (id = 1)
+);
+
+-- Site Settings Politikaları
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can view settings" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Admin can update settings" ON site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
