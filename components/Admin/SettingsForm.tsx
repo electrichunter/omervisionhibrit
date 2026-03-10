@@ -138,19 +138,19 @@ export default function SettingsForm({ initialData, action }: SettingsFormProps)
                             Profil / Hakkımda Görseli
                         </label>
                         {imageUrl ? (
-                            <div className="mt-2 mb-4 relative h-64 w-full md:w-1/2 rounded-xl overflow-hidden bg-slate-900 border border-slate-700">
+                            <div className="mt-2 mb-4 relative h-48 w-48 rounded-full shadow-2xl overflow-hidden bg-slate-900 border-4 border-slate-700 mx-auto sm:mx-0">
                                 <Image src={imageUrl} alt="Profile" fill className="object-cover" />
                                 <button
                                     type="button"
                                     onClick={() => setImageUrl(null)}
-                                    className="absolute top-2 right-2 bg-red-600/80 text-white p-2 rounded-full hover:bg-red-500 text-xs backdrop-blur-md"
+                                    className="absolute inset-0 m-auto w-16 h-16 flex items-center justify-center bg-red-600/80 text-white p-2 rounded-full hover:bg-red-500 text-xs backdrop-blur-md opacity-0 hover:opacity-100 transition-opacity"
                                 >
                                     Kaldır
                                 </button>
                             </div>
                         ) : (
                             <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 max-w-md">
-                                <ImageUploader onUploadSuccess={(url) => setImageUrl(url)} />
+                                <ImageUploader onUploadSuccess={(url) => setImageUrl(url)} isCircular={true} />
                             </div>
                         )}
                         <p className="mt-2 flex text-xs text-slate-500">*(Mevcut profil resminiz. Güncellemek için yükleyin)*</p>

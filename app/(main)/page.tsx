@@ -85,7 +85,7 @@ export default async function PortfolioPage() {
                             ))}
                         </div>
                     </div>
-                    <div className="relative aspect-square md:aspect-[4/3] w-full max-w-md mx-auto rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
+                    <div className="relative aspect-square w-full max-w-sm mx-auto rounded-full overflow-hidden border-4 border-slate-700 shadow-2xl">
                         <Image
                             src={settings.about_image_url || '/omervisison.png'}
                             alt={settings.about_title}

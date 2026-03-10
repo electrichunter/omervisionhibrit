@@ -5,28 +5,12 @@ import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-// Örnek ziyaretçi verisi - 7 Günlük
-const visitorData = [
-    { name: 'Pzt', ziyaretci: 120, tiklama: 400 },
-    { name: 'Sal', ziyaretci: 200, tiklama: 600 },
-    { name: 'Çar', ziyaretci: 150, tiklama: 550 },
-    { name: 'Per', ziyaretci: 280, tiklama: 800 },
-    { name: 'Cum', ziyaretci: 250, tiklama: 750 },
-    { name: 'Cmt', ziyaretci: 390, tiklama: 1200 },
-    { name: 'Paz', ziyaretci: 310, tiklama: 900 },
-];
+interface DashboardChartsProps {
+    visitorData: any[];
+    activityData: any[];
+}
 
-// Örnek sistem etkileşim verisi - Aylık
-const activityData = [
-    { name: 'Ocak', blogYazisi: 4, yorum: 24, proje: 1 },
-    { name: 'Şuvat', blogYazisi: 3, yorum: 13, proje: 0 },
-    { name: 'Mart', blogYazisi: 5, yorum: 45, proje: 2 },
-    { name: 'Nisan', blogYazisi: 2, yorum: 18, proje: 1 },
-    { name: 'Mayıs', blogYazisi: 6, yorum: 62, proje: 3 },
-    { name: 'Haziran', blogYazisi: 8, yorum: 90, proje: 2 },
-];
-
-export default function DashboardCharts() {
+export default function DashboardCharts({ visitorData, activityData }: DashboardChartsProps) {
     // SSR (Server Side Rendering) sırasında recharts animasyon sorunlarını engellemek için mount state kullanımı
     const [isMounted, setIsMounted] = useState(false);
 
@@ -49,8 +33,8 @@ export default function DashboardCharts() {
             {/* 1. Tablo: Site Ziyaretçi & Trafik (Çizgi Grafik) */}
             <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
                 <div className="mb-6">
-                    <h3 className="text-xl font-bold text-slate-100">Haftalık Ziyaretçi Analizi</h3>
-                    <p className="text-sm text-slate-400">Son 7 güne ait tahmini ziyaretçi ve etkileşim sayıları</p>
+                    <h3 className="text-xl font-bold text-slate-100">Haftalık Sistem Aktivitesi</h3>
+                    <p className="text-sm text-slate-400">Son 7 güne ait paylaşılan içerik ve yorum sayıları</p>
                 </div>
                 <div className="h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -66,8 +50,8 @@ export default function DashboardCharts() {
                                 itemStyle={{ color: '#e2e8f0' }}
                             />
                             <Legend verticalAlign="top" height={36} iconType="circle" wrapperStyle={{ fontSize: '14px', color: '#cbd5e1' }} />
-                            <Line type="monotone" name="Görüntüleme" dataKey="tiklama" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                            <Line type="monotone" name="Tekil Ziyaretçi" dataKey="ziyaretci" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                            <Line type="monotone" name="Yeni Blog/Proje" dataKey="yeniIcerik" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                            <Line type="monotone" name="Gelen Yorumlar" dataKey="yorum" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
