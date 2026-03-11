@@ -6,6 +6,8 @@ import { tr } from 'date-fns/locale'
 import { createClient } from '@/utils/supabase/server'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 import Comments from '@/components/Comments'
+import NewsletterForm from '@/components/NewsletterForm'
+import Script from 'next/script'
 
 export const revalidate = 3600 // 1 saatlik ISR Cache
 
@@ -49,8 +51,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         .eq('approved', true)
         .order('created_at', { ascending: false })
 
+    // JSON-LD Schema (Technical SEO)
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://omervision.com' // Kendi domaininize göre çevredeğişkeninden çekin
+    const articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: post.title,
+        image: post.cover_image ? [post.cover_image] : [],
+        datePublished: post.created_at,
+        dateModified: post.updated_at || post.created_at,
+        author: [{
+            '@type': 'Person',
+            name: 'Ömer Uysal',
+            url: baseUrl
+        }],
+        description: post.content.substring(0, 150).replace(/\n/g, ' ') + '...'
+    }
+
     return (
         <article className="mx-auto max-w-3xl space-y-8">
+            <Script
+                id="article-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+            />
+
             <header className="space-y-4 text-center">
                 <time className="text-sm font-mono text-gray-500 block">
                     {format(new Date(post.created_at), 'd MMMM yyyy', { locale: tr })}
@@ -75,6 +100,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div className="pt-8">
                 <MarkdownRenderer content={post.content} />
             </div>
+
+            <hr className="border-t border-zinc-800/60 my-10" />
+
+            <NewsletterForm />
+
+            <hr className="border-t border-zinc-800/60 my-10" />
 
             <Comments postId={post.id} slug={slug} initialComments={comments || []} />
         </article>

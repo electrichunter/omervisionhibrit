@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { v2 as cloudinary } from 'cloudinary'
+import { rateLimiter } from '@/utils/rateLimit'
 
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -9,6 +10,16 @@ cloudinary.config({
 
 export async function POST(req: Request) {
     try {
+        const ip = req.headers.get('x-forwarded-for') || '127.0.0.1'
+        const isAllowed = rateLimiter(ip, { interval: 60 * 1000, maxRequests: 10 }) // Limit to 10 upload requests per minute per IP
+
+        if (!isAllowed) {
+            return NextResponse.json(
+                { error: 'Çok fazla yükleme isteği. Lütfen daha sonra tekrar deneyin (Rate Limit).' },
+                { status: 429 }
+            )
+        }
+
         const formData = await req.formData()
         const file = formData.get('media') as File | null
 

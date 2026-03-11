@@ -2,8 +2,19 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
+import { rateLimiter } from '@/utils/rateLimit'
 
 export async function addComment(postId: string, formData: FormData) {
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
+
+    // Rate Limit: Allow only 5 comments per minute per IP to prevent comment spam
+    const isAllowed = rateLimiter(ip, { interval: 60 * 1000, maxRequests: 5 })
+    if (!isAllowed) {
+        return { error: 'Çok fazla yorum isteği gönderdiniz. Lütfen bir süre bekleyin.' }
+    }
+
     const author_name = formData.get('author_name') as string
     const content = formData.get('content') as string
     const slug = formData.get('slug') as string
